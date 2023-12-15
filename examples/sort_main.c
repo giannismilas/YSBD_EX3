@@ -4,7 +4,7 @@
 #include "merge.h"
 
 #define RECORDS_NUM 500 // you can change it if you want
-#define FILE_NAME "data.db"
+#define FILE_NAME "data2.db"
 #define OUT_NAME "out"
 
 
@@ -55,7 +55,7 @@ void mergePhases(int inputFileDesc,int chunkSize,int bWay, int* fileCounter){
   int oututFileDesc;
   while(chunkSize<=HP_GetIdOfLastBlock(inputFileDesc)){
     oututFileDesc =   nextOutputFile(fileCounter);
-    merge(inputFileDesc, chunkSize, bWay, oututFileDesc );
+    //merge(inputFileDesc, chunkSize, bWay, oututFileDesc );
     HP_CloseFile(inputFileDesc);
     chunkSize*=bWay;
     inputFileDesc = oututFileDesc;

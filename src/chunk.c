@@ -27,13 +27,17 @@ int CHUNK_GetNext(CHUNK_Iterator *iterator,CHUNK* chunk){
 int CHUNK_GetIthRecordInChunk(CHUNK* chunk,  int i, Record* record){
     int blockId = chunk->from_BlockId + (i - 1) / HP_GetMaxRecordsInBlock(chunk->file_desc);
     int cursor = (i - 1) % HP_GetMaxRecordsInBlock(chunk->file_desc);
-    return HP_GetRecord(chunk->file_desc, blockId, cursor, record);
+    int temp= HP_GetRecord(chunk->file_desc, blockId, cursor, record);
+    HP_Unpin(chunk->file_desc, blockId);
+    return temp;
 }
 
 int CHUNK_UpdateIthRecord(CHUNK* chunk,  int i, Record record){
     int blockId = chunk->from_BlockId + (i - 1) / HP_GetMaxRecordsInBlock(chunk->file_desc);
     int cursor = (i - 1) % HP_GetMaxRecordsInBlock(chunk->file_desc);
-    return HP_UpdateRecord(chunk->file_desc, blockId, cursor, record);
+    int temp= HP_UpdateRecord(chunk->file_desc, blockId, cursor, record);
+    HP_Unpin(chunk->file_desc, blockId);
+    return temp;
 }
 
 void CHUNK_Print(CHUNK chunk){
