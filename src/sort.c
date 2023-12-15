@@ -36,8 +36,10 @@ void sort_FileInChunks(int file_desc, int numBlocksInChunk) {
             totalRecords += HP_GetRecordCounter(file_desc, blockId);
         }
         chunk.recordsInChunk = totalRecords;
+        printf("%d %d %d %d\n",chunk.from_BlockId,chunk.to_BlockId,chunk.recordsInChunk,chunk.blocksInChunk);
 
-        sort_Chunk(&chunk);
+
+        //sort_Chunk(&chunk);
         currentBlock += numBlocksInChunk;
     }
 }
