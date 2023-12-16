@@ -28,7 +28,7 @@ void sort_FileInChunks(int file_desc, int numBlocksInChunk) {
         chunk.from_BlockId = currentBlock;
         chunk.to_BlockId = currentBlock + numBlocksInChunk - 1;
         if (chunk.to_BlockId > totalBlocks) {
-            chunk.to_BlockId = totalBlocks;
+            chunk.to_BlockId = totalBlocks-1;
         }
         chunk.blocksInChunk=chunk.to_BlockId-chunk.from_BlockId+1;
         int totalRecords = 0;
@@ -45,22 +45,57 @@ void sort_FileInChunks(int file_desc, int numBlocksInChunk) {
 }
 
 
-void sort_Chunk(CHUNK* chunk) {
-    int i, j;
-    Record record1, record2;
+void sort_Chunk(CHUNK* chunk){
+    Record* records = malloc(sizeof(Record) * HP_GetMaxRecordsInBlock(chunk->file_desc) * chunk->blocksInChunk);
+    int totalRecords = 0;
 
-    for (i = 0; i < chunk->recordsInChunk - 1; i++) {
-        for (j = 0; j < chunk->recordsInChunk - i - 1; j++) {
-            // Get the j-th and (j+1)-th records from the chunk
-            CHUNK_GetIthRecordInChunk(chunk, j, &record1);
-            CHUNK_GetIthRecordInChunk(chunk, j + 1, &record2);
-            // Compare names and surnames of two records and swap if necessary
-            if (shouldSwap(&record1, &record2)) {
-                CHUNK_UpdateIthRecord(chunk, j, record2);
-                CHUNK_UpdateIthRecord(chunk, j + 1, record1);
+    // Load all records within the chunk
+    for (int blockId = chunk->from_BlockId; blockId <= chunk->to_BlockId; blockId++) {
+        int numRecords = HP_GetRecordCounter(chunk->file_desc, blockId);
+        for (int i = 0; i < numRecords; i++) {
+            Record record;
+            if (HP_GetRecord(chunk->file_desc, blockId, i, &record) != -1) {
+                if (totalRecords < HP_GetMaxRecordsInBlock(chunk->file_desc) * chunk->blocksInChunk) {
+                    records[totalRecords++] = record;
+                } else {
+                    break;
+                }
+            }
+        }
+        // Unpin after processing each block
+        HP_Unpin(chunk->file_desc, blockId);
+    }
+
+    // Perform sorting
+    for (int i = 0; i < totalRecords - 1; ++i) {
+        for (int j = 0; j < totalRecords - i - 1; ++j) {
+            if (shouldSwap(&records[j], &records[j + 1])) {
+                Record temp = records[j];
+                records[j] = records[j + 1];
+                records[j + 1] = temp;
             }
         }
     }
+
+    //Rewrite the sorted records back to the chunk
+    int currentRecord = 0;
+    for (int blockId = chunk->from_BlockId; blockId <= chunk->to_BlockId; blockId++) {
+        int numRecords = HP_GetRecordCounter(chunk->file_desc, blockId);
+        for (int i = 0; i < numRecords; i++) {
+            if (currentRecord < totalRecords) {
+                if (HP_UpdateRecord(chunk->file_desc, blockId, i, records[currentRecord]) != -1) {
+                    currentRecord++;
+                }
+            } else {
+                break;
+            }
+        }
+        // Unpin after updating each block
+        HP_Unpin(chunk->file_desc, blockId);
+    }
+
+    free(records);
 }
+
 
 
