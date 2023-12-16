@@ -46,6 +46,8 @@ void merge(int input_FileDesc, int chunkSize, int bWay, int output_FileDesc ){
                 memcpy(newData, data, BF_BLOCK_SIZE);
 
                 BF_Block_SetDirty(newBlock);
+                BF_UnpinBlock(newBlock);
+                BF_UnpinBlock(block);
                 BF_Block_Destroy(&block);
                 BF_Block_Destroy(&newBlock);
             }
@@ -59,9 +61,6 @@ void merge(int input_FileDesc, int chunkSize, int bWay, int output_FileDesc ){
         BF_GetBlock(output_FileDesc, newChunk.to_BlockId, lastBlock);
         BF_UnpinBlock(lastBlock);
         BF_Block_Destroy(&lastBlock);
-        CHUNK_DestroyIterator(&iterator);
     }
-
-    BF_CloseFile(input_FileDesc);
-    BF_CloseFile(output_FileDesc);
+    
 }
