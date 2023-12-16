@@ -30,7 +30,7 @@ void sort_FileInChunks(int file_desc, int numBlocksInChunk) {
         if (chunk.to_BlockId > totalBlocks) {
             chunk.to_BlockId = totalBlocks;
         }
-
+        chunk.blocksInChunk=chunk.to_BlockId-chunk.from_BlockId+1;
         int totalRecords = 0;
         for (int blockId = chunk.from_BlockId; blockId <= chunk.to_BlockId; blockId++) {
             totalRecords += HP_GetRecordCounter(file_desc, blockId);
@@ -39,7 +39,7 @@ void sort_FileInChunks(int file_desc, int numBlocksInChunk) {
         printf("%d %d %d %d\n",chunk.from_BlockId,chunk.to_BlockId,chunk.recordsInChunk,chunk.blocksInChunk);
 
 
-        //sort_Chunk(&chunk);
+        sort_Chunk(&chunk);
         currentBlock += numBlocksInChunk;
     }
 }
@@ -54,7 +54,6 @@ void sort_Chunk(CHUNK* chunk) {
             // Get the j-th and (j+1)-th records from the chunk
             CHUNK_GetIthRecordInChunk(chunk, j, &record1);
             CHUNK_GetIthRecordInChunk(chunk, j + 1, &record2);
-
             // Compare names and surnames of two records and swap if necessary
             if (shouldSwap(&record1, &record2)) {
                 CHUNK_UpdateIthRecord(chunk, j, record2);
