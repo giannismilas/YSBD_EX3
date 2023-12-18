@@ -21,7 +21,7 @@ int nextOutputFile(int* fileCounter);
 int main() {
   int chunkSize=5;
   int bWay= 4;
-  int fileIterator;
+  int fileIterator=0;
   //
   BF_Init(LRU);
   int file_desc = createAndPopulateHeapFile(FILE_NAME);
