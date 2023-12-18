@@ -24,7 +24,6 @@ void merge(int input_FileDesc, int chunkSize, int bWay, int output_FileDesc) {
         bool anyRecords = false;
         // Load new chunks or check records in the loaded chunks
         for (int i = 0; i < bWay; ++i) {
-            //printf("%d\t",cursors[i]);
             if (cursors[i] == -1) {  // Load new chunk
                 temp=CHUNK_GetNext(&chunkIterator, &ch[i]);
                 if (temp!=-1) {
@@ -36,7 +35,6 @@ void merge(int input_FileDesc, int chunkSize, int bWay, int output_FileDesc) {
             } else {  // Check records in the loaded chunks
                 anyRecords = true;
             }
-             printf("\n");
         }
 
         if (!anyRecords) {
