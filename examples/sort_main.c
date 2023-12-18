@@ -26,6 +26,7 @@ int main() {
   BF_Init(LRU);
   int file_desc = createAndPopulateHeapFile(FILE_NAME);
   sortPhase(file_desc,chunkSize);
+  HP_PrintAllEntries(file_desc);
   mergePhases(file_desc,chunkSize,bWay,&fileIterator);
 }
 
