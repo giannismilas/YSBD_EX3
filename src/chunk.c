@@ -3,26 +3,41 @@
 #include "chunk.h"
 
 
-CHUNK_Iterator CHUNK_CreateIterator(int fileDesc, int blocksInChunk){
+CHUNK_Iterator CHUNK_CreateIterator(int fileDesc, int blocksInChunk) {
     CHUNK_Iterator iterator;
     iterator.file_desc = fileDesc;
-    iterator.current = 1; // Assuming starting from block 1
-    iterator.lastBlocksID = -1; // Not known initially
+    iterator.current = 1;  // Starting block
     iterator.blocksInChunk = blocksInChunk;
+    BF_GetBlockCounter(fileDesc, &iterator.lastBlocksID);
+
     return iterator;
 }
 
-int CHUNK_GetNext(CHUNK_Iterator *iterator,CHUNK* chunk){
-    if (iterator->lastBlocksID != -1 && iterator->current >= iterator->lastBlocksID) {
-        // Last chunk or out of bounds
-        return -1;
+
+int CHUNK_GetNext(CHUNK_Iterator *iterator, CHUNK *chunk) {
+    if (iterator->current > iterator->lastBlocksID) {
+        return -1; // Reached the end of chunks
     }
+    
     chunk->file_desc = iterator->file_desc;
     chunk->from_BlockId = iterator->current;
     chunk->to_BlockId = iterator->current + iterator->blocksInChunk - 1;
+
+    // Adjust the 'to_BlockId' if it exceeds the limit
+    if (chunk->to_BlockId > iterator->lastBlocksID) {
+        chunk->to_BlockId = iterator->lastBlocksID;
+    }
+
+    int count=0;
+    for(int i=chunk->from_BlockId; i<=chunk->to_BlockId; i++)
+        count+=HP_GetRecordCounter(iterator->file_desc,i);
+    chunk->recordsInChunk=count;
+
     iterator->current += iterator->blocksInChunk;
-    return 1;
+
+    return 0; // Successfully retrieved the next chunk
 }
+
 
 int CHUNK_GetIthRecordInChunk(CHUNK* chunk,  int i, Record* record){
     int blockId = chunk->from_BlockId + (i - 1) / HP_GetMaxRecordsInBlock(chunk->file_desc);
