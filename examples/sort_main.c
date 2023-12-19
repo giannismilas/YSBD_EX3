@@ -26,7 +26,7 @@ int main() {
   BF_Init(LRU);
   int file_desc = createAndPopulateHeapFile(FILE_NAME);
   sortPhase(file_desc,chunkSize);
-  //HP_PrintAllEntries(file_desc);
+  
   mergePhases(file_desc,chunkSize,bWay,&fileIterator);
 }
 
@@ -60,7 +60,10 @@ void mergePhases(int inputFileDesc,int chunkSize,int bWay, int* fileCounter){
     HP_CloseFile(inputFileDesc);
     chunkSize*=bWay;
     inputFileDesc = oututFileDesc;
+    HP_PrintAllEntries(oututFileDesc);
+    printf("\n\n\n");
   }
+
   HP_CloseFile(oututFileDesc);
 }
 
