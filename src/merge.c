@@ -50,7 +50,7 @@ void merge(int input_FileDesc, int chunkSize, int bWay, int output_FileDesc) {
             //printf("%d\n",cursors[i]);
             if(cursors[i]!=-1){
                 CHUNK_GetIthRecordInChunk(&ch[i],  cursors[i], &current);
-                if ( (minposition == -1 || shouldSwap(&current, &minRecord))) {
+                if ( (minposition == -1 || shouldSwap(&minRecord,&current))) {
                     minRecord = current;
                     minposition = i;
                 }
