@@ -61,9 +61,10 @@ void sort_Chunk(CHUNK* chunk){
                     break;
                 }
             }
+            // Unpin after processing each block
+            HP_Unpin(chunk->file_desc, blockId);
         }
-        // Unpin after processing each block
-        HP_Unpin(chunk->file_desc, blockId);
+
     }
 
     // Perform sorting
@@ -86,12 +87,13 @@ void sort_Chunk(CHUNK* chunk){
                 if (HP_UpdateRecord(chunk->file_desc, blockId, i, records[currentRecord]) != -1) {
                     currentRecord++;
                 }
+                // Unpin after updating each block
+                HP_Unpin(chunk->file_desc, blockId);
             } else {
                 break;
             }
         }
-        // Unpin after updating each block
-        HP_Unpin(chunk->file_desc, blockId);
+
     }
 
     free(records);
