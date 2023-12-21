@@ -6,3 +6,7 @@ clean:
 	@echo "Cleaning..."
 	rm -f ./build/sort_main # Removes the executable
 	rm -f $(CURDIR)/*.db     # Removes .db files in the directory of the Makefile
+
+run: sort
+	@echo "Running sort_main ..."
+	./build/sort_main
