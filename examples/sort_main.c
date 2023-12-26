@@ -3,7 +3,7 @@
 #include <string.h>
 #include "merge.h"
 
-#define RECORDS_NUM 100 // you can change it if you want
+#define RECORDS_NUM 300 // you can change it if you want
 #define FILE_NAME "data.db"
 #define OUT_NAME "out"
 
@@ -20,7 +20,7 @@ int nextOutputFile(int* fileCounter);
 
 int main() {
   int chunkSize=5;
-  int bWay= 4;
+  int bWay= 10;
   int fileIterator=0;
   //
   BF_Init(LRU);
