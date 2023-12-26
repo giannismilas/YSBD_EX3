@@ -3,10 +3,6 @@
 #include <string.h>
 #include <stdbool.h>
 
-
-
-
-
 void merge(int input_FileDesc, int chunkSize, int bWay, int output_FileDesc) {
     // Create a CHUNK iterator to traverse through input chunks
     CHUNK_Iterator chunkIterator = CHUNK_CreateIterator(input_FileDesc, chunkSize);

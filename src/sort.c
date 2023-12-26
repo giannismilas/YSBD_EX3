@@ -9,40 +9,38 @@
 #include "chunk.h"
 
 bool shouldSwap(Record* rec1,Record* rec2){
-    int compareNames = strcmp(rec1->name, rec2->name);
+    int compareNames = strcmp(rec1->name, rec2->name);              //check names and surnames
     int compareSurnames = strcmp(rec1->surname, rec2->surname);
     if (compareNames == 0) {
-        return compareSurnames > 0; // Swap if surnames need to be adjusted
+        return compareSurnames > 0;                                 // Swap if surnames need to be adjusted
     }
-    return compareNames > 0; // Swap if names need to be adjusted
+    return compareNames > 0;                                        // Swap if names need to be adjusted
 }
 
 void sort_FileInChunks(int file_desc, int numBlocksInChunk) {
-    int totalBlocks;
+    int totalBlocks;            
     BF_GetBlockCounter(file_desc, &totalBlocks);
     int currentBlock = 1;
 
     while (currentBlock <= totalBlocks) {
         CHUNK chunk;
-        chunk.file_desc = file_desc;
+        chunk.file_desc = file_desc;                                
         chunk.from_BlockId = currentBlock;
-        chunk.to_BlockId = currentBlock + numBlocksInChunk - 1;
+        chunk.to_BlockId = currentBlock + numBlocksInChunk - 1;     
         if (chunk.to_BlockId > totalBlocks) {
             chunk.to_BlockId = totalBlocks-1;
         }
-        chunk.blocksInChunk=chunk.to_BlockId-chunk.from_BlockId+1;
+        chunk.blocksInChunk=chunk.to_BlockId-chunk.from_BlockId+1;  
         int totalRecords = 0;
         for (int blockId = chunk.from_BlockId; blockId <= chunk.to_BlockId; blockId++) {
             totalRecords += HP_GetRecordCounter(file_desc, blockId);
         }
         chunk.recordsInChunk = totalRecords;
 
-
-        sort_Chunk(&chunk);
+        sort_Chunk(&chunk);                                     //call sort function
         currentBlock += numBlocksInChunk;
     }
 }
-
 
 void sort_Chunk(CHUNK* chunk){
     Record* records = malloc(sizeof(Record) * HP_GetMaxRecordsInBlock(chunk->file_desc) * chunk->blocksInChunk);
@@ -94,7 +92,6 @@ void sort_Chunk(CHUNK* chunk){
         }
 
     }
-
     free(records);
 }
 
