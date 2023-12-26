@@ -60,7 +60,7 @@ void mergePhases(int inputFileDesc,int chunkSize,int bWay, int* fileCounter){
     chunkSize*=bWay;
     inputFileDesc = oututFileDesc;
   }
-  HP_PrintAllEntries(oututFileDesc);
+  HP_PrintAllEntries(oututFileDesc);      //print final output file
   HP_CloseFile(oututFileDesc);
 }
 
