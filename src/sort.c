@@ -94,6 +94,3 @@ void sort_Chunk(CHUNK* chunk){
     }
     free(records);
 }
-
-
-
