@@ -30,6 +30,9 @@ int CHUNK_GetNext(CHUNK_Iterator *iterator, CHUNK *chunk) {
     for(int i=chunk->from_BlockId; i<=chunk->to_BlockId; i++)
         count+=HP_GetRecordCounter(iterator->file_desc,i);
     chunk->recordsInChunk=count;
+    if(chunk->to_BlockId==iterator->lastBlocksID)
+        chunk->recordsInChunk++;
+
     chunk->blocksInChunk=chunk->to_BlockId-chunk->from_BlockId+1;
 
     iterator->current += iterator->blocksInChunk;
