@@ -45,7 +45,6 @@ void merge(int input_FileDesc, int chunkSize, int bWay, int output_FileDesc) {
         // Find the minimum record among the available records in the chunks
         Record current;
         for (int i = 0; i < bWay; ++i) {
-            //printf("%d\n",cursors[i]);
             if(cursors[i]!=-1){
                 CHUNK_GetIthRecordInChunk(&ch[i],  cursors[i], &current);
                 if ( (minposition == -1 || shouldSwap(&minRecord,&current))) {
