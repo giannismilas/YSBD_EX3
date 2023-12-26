@@ -27,10 +27,8 @@ void merge(int input_FileDesc, int chunkSize, int bWay, int output_FileDesc) {
             if (cursors[i] == -1) {  // Load new chunk
                 temp=CHUNK_GetNext(&chunkIterator, &ch[i]);
                 if (temp!=-1) {
-                    if(ch[i].recordsInChunk!=0){
-                        cursors[i] = 1;
-                        anyRecords = true;
-                    }
+                    cursors[i] = 1;
+                    anyRecords = true;
                 }
             } else {  // Check records in the loaded chunks
                 anyRecords = true;
